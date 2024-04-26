@@ -273,6 +273,7 @@ abstract class AbstractIOUringStreamChannel extends AbstractIOUringChannel imple
                 if (res < 0) {
                     // If res is negative we should pass it to ioResult(...) which will either throw
                     // or convert it to 0 if we could not read because the socket was not readable.
+                    // res 返回读取的字节数，-1 表示 socket 没有数据可读，其他负数表示异常
                     allocHandle.lastBytesRead(ioResult("io_uring read", res));
                 } else if (res > 0) {
                     byteBuf.writerIndex(byteBuf.writerIndex() + res);
@@ -281,6 +282,7 @@ abstract class AbstractIOUringStreamChannel extends AbstractIOUringChannel imple
                     // EOF which we signal with -1.
                     allocHandle.lastBytesRead(-1);
                 }
+                // lastBytesRead == 0 表示 socket 没有数据可读
                 if (allocHandle.lastBytesRead() <= 0) {
                     // nothing was read, release the buffer.
                     byteBuf.release();

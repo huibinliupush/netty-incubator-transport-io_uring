@@ -172,6 +172,7 @@ final class IOUringSubmissionQueue {
     }
 
     private boolean addPoll(int fd, int pollMask) {
+        // IORING_OP_POLL_ADD @see https://man7.org/linux/man-pages/man2/io_uring_enter2.2.html
         return enqueueSqe(Native.IORING_OP_POLL_ADD, 0, pollMask, fd, 0, 0, 0, (short) pollMask);
     }
 

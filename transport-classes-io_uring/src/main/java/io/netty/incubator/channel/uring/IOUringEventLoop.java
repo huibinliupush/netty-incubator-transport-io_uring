@@ -323,10 +323,17 @@ public final class IOUringEventLoop extends SingleThreadEventLoop {
         if ((pollMask & Native.POLLOUT) != 0) {
             channel.ioUringUnsafe().pollOut(res);
         }
+        // poll in 在 begin read 的时候注册
         if ((pollMask & Native.POLLIN) != 0) {
+            // 触发 read loop
             channel.ioUringUnsafe().pollIn(res);
         }
+        // POLLRDHUP 在 doRegister 的时候注册
+        // POLLHUP 表示对端发起 close 关闭 socket
+        // POLLRDHUP 表示对端发起 shutdown 发起 socket 半关闭
+        // see : https://stackoverflow.com/questions/56177060/pollhup-vs-pollrdhup
         if ((pollMask & Native.POLLRDHUP) != 0) {
+            // 触发 read loop
             channel.ioUringUnsafe().pollRdHup(res);
         }
     }
