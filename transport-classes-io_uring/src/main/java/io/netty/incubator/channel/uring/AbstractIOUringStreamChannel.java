@@ -293,6 +293,7 @@ abstract class AbstractIOUringStreamChannel extends AbstractIOUringChannel imple
                         shutdownInput(false);
                     }
                     allocHandle.readComplete();
+                    // 触发 poll in
                     pipeline.fireChannelReadComplete();
                     return;
                 }
@@ -306,6 +307,7 @@ abstract class AbstractIOUringStreamChannel extends AbstractIOUringChannel imple
                 } else {
                     // We did not fill the whole ByteBuf so we should break the "read loop" and try again later.
                     allocHandle.readComplete();
+                    //  触发 poll in
                     pipeline.fireChannelReadComplete();
                 }
             } catch (Throwable t) {

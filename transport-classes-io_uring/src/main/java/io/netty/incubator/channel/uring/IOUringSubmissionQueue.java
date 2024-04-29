@@ -203,7 +203,9 @@ final class IOUringSubmissionQueue {
     boolean addWrite(int fd, long bufferAddress, int pos, int limit, short extraData) {
         return enqueueSqe(Native.IORING_OP_WRITE, flags(), 0, fd, bufferAddress + pos, limit - pos, 0, extraData);
     }
-
+    // https://tchaloupka.github.io/during/source/during.io_uring.d.html
+    // provide buffer :     https://lwn.net/Articles/813311/
+    // io_issue_sqe : https://android.googlesource.com/kernel/common/+/52c479697c9b/fs/io_uring.c
     boolean addRecv(int fd, long bufferAddress, int pos, int limit, short extraData) {
         return enqueueSqe(Native.IORING_OP_RECV, flags(), 0, fd, bufferAddress + pos, limit - pos, 0, extraData);
     }

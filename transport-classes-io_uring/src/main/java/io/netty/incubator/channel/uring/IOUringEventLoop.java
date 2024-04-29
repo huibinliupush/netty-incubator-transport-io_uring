@@ -330,7 +330,13 @@ public final class IOUringEventLoop extends SingleThreadEventLoop {
         }
         // POLLRDHUP 在 doRegister 的时候注册
         // POLLHUP 表示对端发起 close 关闭 socket
+        // this event merely indicates that the peer closed its
+        //       end of the channel.  Subsequent reads from the channel will
+        //       return 0 (end of file) only after all outstanding data in the
+        //       channel has been consumed.
+
         // POLLRDHUP 表示对端发起 shutdown 发起 socket 半关闭
+        // Stream socket peer closed connection, or shut down writing half of connection
         // see : https://stackoverflow.com/questions/56177060/pollhup-vs-pollrdhup
         if ((pollMask & Native.POLLRDHUP) != 0) {
             // 触发 read loop
